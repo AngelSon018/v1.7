@@ -3,7 +3,7 @@ import 'package:sixam_mart/data/model/response/language_model.dart';
 import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
-  static const String APP_NAME = '6amMart';
+  static const String APP_NAME = 'MasterMovers';
   static const double APP_VERSION = 1.7;
 
   static const String BASE_URL = 'https://admin.mastermovers.ph';
