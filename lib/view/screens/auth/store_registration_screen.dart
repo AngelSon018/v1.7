@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/auth_controller.dart';
-import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/model/body/store_body.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
@@ -156,9 +155,9 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                       ),
                     ]),
                   ),
-                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                  /*SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-                  Expanded(child: ModuleViewWidget()),
+                  Expanded(child: ModuleViewWidget()),*/
                 ],
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -243,6 +242,9 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
 
               authController.zoneList != null ? SelectLocationView(fromView: true) : Center(child: CircularProgressIndicator()),
               SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+              authController.moduleList != null ? ModuleViewWidget() : SizedBox(),
+              SizedBox(height: authController.moduleList != null ? Dimensions.PADDING_SIZE_LARGE : 0),
 
               Center(child: Text(
                 'owner_information'.tr,
@@ -370,13 +372,13 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   }else if(_password != _confirmPassword) {
                     showCustomSnackBar('confirm_password_does_not_matched'.tr);
                   }else {
-                    print('%%%%%%%%%%%${Get.find<SplashController>().moduleList[Get.find<SplashController>().selectedModuleIndex].id}');
+                    print('%%%%%%%%%%%${authController.moduleList[authController.selectedModuleIndex].id}');
                     authController.registerStore(StoreBody(
                       storeName: _name, storeAddress: _address, tax: _vat, minDeliveryTime: _minTime,
                       maxDeliveryTime: _maxTime, lat: authController.restaurantLocation.latitude.toString(), email: _email,
                       lng: authController.restaurantLocation.longitude.toString(), fName: _fName, lName: _lName, phone: _phone,
                       password: _password, zoneId: authController.zoneList[authController.selectedZoneIndex].id.toString(),
-                      moduleId: Get.find<SplashController>().moduleList[Get.find<SplashController>().selectedModuleIndex].id.toString(),
+                      moduleId: authController.moduleList[authController.selectedModuleIndex].id.toString(),
                       deliveryTimeType: authController.deliveryTimeTypeList[authController.deliveryTimeTypeIndex],
                     ));
                   }

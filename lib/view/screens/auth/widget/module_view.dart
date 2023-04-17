@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sixam_mart/controller/splash_controller.dart';
+import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 class ModuleViewWidget extends StatelessWidget {
@@ -8,11 +8,11 @@ class ModuleViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SplashController>(builder: (splashController) {
+    return GetBuilder<AuthController>(builder: (authController) {
       List<int> _moduleIndexList = [];
-      if(splashController.moduleList != null) {
-        for(int index=0; index < splashController.moduleList.length; index++) {
-          if(splashController.moduleList[index].moduleType != 'parcel') {
+      if(authController.moduleList != null) {
+        for(int index=0; index < authController.moduleList.length; index++) {
+          if(authController.moduleList[index].moduleType != 'parcel') {
             _moduleIndexList.add(index);
           }
         }
@@ -25,22 +25,22 @@ class ModuleViewWidget extends StatelessWidget {
         ),
         SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-        splashController.moduleList != null ? Container(
+        authController.moduleList != null ? Container(
           padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
             boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
           ),
           child: DropdownButton<int>(
-            value: splashController.selectedModuleIndex,
+            value: authController.selectedModuleIndex,
             items: _moduleIndexList.map((int value) {
               return DropdownMenuItem<int>(
                 value: value,
-                child: Text(splashController.moduleList[value].moduleName),
+                child: Text(authController.moduleList[value].moduleName),
               );
             }).toList(),
             onChanged: (value) {
-              splashController.selectModuleIndex(value);
+              authController.selectModuleIndex(value);
             },
             isExpanded: true,
             underline: SizedBox(),

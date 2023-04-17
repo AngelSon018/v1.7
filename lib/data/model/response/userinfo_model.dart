@@ -13,6 +13,7 @@ class UserInfoModel {
   double walletBalance;
   int loyaltyPoint;
   String refCode;
+  String socialId;
   User userInfo;
 
   UserInfoModel(
@@ -28,6 +29,7 @@ class UserInfoModel {
         this.walletBalance,
         this.loyaltyPoint,
         this.refCode,
+        this.socialId,
         this.userInfo});
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class UserInfoModel {
     walletBalance = json['wallet_balance'].toDouble();
     loyaltyPoint = json['loyalty_point'];
     refCode = json['ref_code'];
+    socialId = json['social_id'] != null ? json['social_id'] : null;
     userInfo = json['userinfo'] != null ? new User.fromJson(json['userinfo']) : null;
   }
 

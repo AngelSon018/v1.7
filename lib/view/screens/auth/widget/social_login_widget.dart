@@ -14,7 +14,7 @@ class SocialLoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-    return (Get.find<SplashController>().configModel.socialLogin[0].status
+    return Get.find<SplashController>().configModel.socialLogin.isNotEmpty && (Get.find<SplashController>().configModel.socialLogin[0].status
     || Get.find<SplashController>().configModel.socialLogin[1].status) ? Column(children: [
 
       Center(child: Text('social_login'.tr, style: robotoMedium)),

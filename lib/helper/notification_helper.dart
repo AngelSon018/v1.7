@@ -26,6 +26,7 @@ class NotificationHelper {
         NotificationBody _payload;
         if(payload != null && payload.isNotEmpty) {
           _payload = NotificationBody.fromJson(jsonDecode(payload));
+          print('conversation id: ${_payload.conversationId}');
           if(_payload.notificationType == NotificationType.order) {
             Get.offAllNamed(RouteHelper.getOrderDetailsRoute(int.parse(_payload.orderId.toString()), fromNotification: true));
           } else if(_payload.notificationType == NotificationType.general) {
@@ -40,6 +41,7 @@ class NotificationHelper {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("onMessage: ${message.notification.title}/${message.notification.body}/${message.notification.titleLocKey}");
+      print("onMessage type: ${message.data['type']}/${message.data}");
       if(message.data['type'] == 'message' && Get.currentRoute.startsWith(RouteHelper.messages)) {
         if(Get.find<AuthController>().isLoggedIn()) {
           Get.find<ChatController>().getConversationList(1);

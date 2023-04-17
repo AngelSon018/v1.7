@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/view/screens/home/theme1/store_widget.dart';
 
-class ItemsView extends StatelessWidget {
+class ItemsView extends StatefulWidget {
   final List<Item> items;
   final List<Store> stores;
   final bool isStore;
@@ -30,62 +30,67 @@ class ItemsView extends StatelessWidget {
     this.isCampaign = false, this.inStorePage = false, this.type, this.onVegFilterTap, this.isFeatured = false, this.showTheme1Store = false});
 
   @override
+  State<ItemsView> createState() => _ItemsViewState();
+}
+
+class _ItemsViewState extends State<ItemsView> {
+  @override
   Widget build(BuildContext context) {
     bool _isNull = true;
     int _length = 0;
-    if(isStore) {
-      _isNull = stores == null;
+    if(widget.isStore) {
+      _isNull = widget.stores == null;
       if(!_isNull) {
-        _length = stores.length;
+        _length = widget.stores.length;
       }
     }else {
-      _isNull = items == null;
+      _isNull = widget.items == null;
       if(!_isNull) {
-        _length = items.length;
+        _length = widget.items.length;
       }
     }
 
     return Column(children: [
 
-      type != null ? VegFilterWidget(type: type, onSelected: onVegFilterTap) : SizedBox(),
+      widget.type != null ? VegFilterWidget(type: widget.type, onSelected: widget.onVegFilterTap) : SizedBox(),
 
       !_isNull ? _length > 0 ? GridView.builder(
         key: UniqueKey(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
           mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0.01,
-          childAspectRatio: ResponsiveHelper.isDesktop(context) ? 4 : showTheme1Store ? 1.9 : 4,
+          childAspectRatio: ResponsiveHelper.isDesktop(context) ? 4 : widget.showTheme1Store ? 1.9 : 4,
           crossAxisCount: ResponsiveHelper.isMobile(context) ? 1 : 2,
         ),
-        physics: isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-        shrinkWrap: isScrollable ? false : true,
+        physics: widget.isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+        shrinkWrap: widget.isScrollable ? false : true,
         itemCount: _length,
-        padding: padding,
+        padding: widget.padding,
         itemBuilder: (context, index) {
-          return showTheme1Store ? StoreWidget(store: stores[index], index: index, inStore: inStorePage) : ItemWidget(
-            isStore: isStore, item: isStore ? null : items[index], isFeatured: isFeatured,
-            store: isStore ? stores[index] : null, index: index, length: _length, isCampaign: isCampaign,
-            inStore: inStorePage,
+          return widget.showTheme1Store ? StoreWidget(store: widget.stores[index], index: index, inStore: widget.inStorePage) : ItemWidget(
+            isStore: widget.isStore, item: widget.isStore ? null : widget.items[index], isFeatured: widget.isFeatured,
+            store: widget.isStore ? widget.stores[index] : null, index: index, length: _length, isCampaign: widget.isCampaign,
+            inStore: widget.inStorePage,
           );
         },
       ) : NoDataScreen(
-        text: noDataText != null ? noDataText : isStore ? Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+        text: widget.noDataText != null ? widget.noDataText : widget.isStore ? Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
             ? 'no_restaurant_available'.tr : 'no_store_available'.tr : 'no_item_available'.tr,
       ) : GridView.builder(
         key: UniqueKey(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
           mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0.01,
-          childAspectRatio: ResponsiveHelper.isDesktop(context) ? 4 : showTheme1Store ? 1.9 : 4,
+          childAspectRatio: ResponsiveHelper.isDesktop(context) ? 4 : widget.showTheme1Store ? 1.9 : 4,
           crossAxisCount: ResponsiveHelper.isMobile(context) ? 1 : 2,
         ),
-        physics: isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-        shrinkWrap: isScrollable ? false : true,
-        itemCount: shimmerLength,
-        padding: padding,
+        physics: widget.isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+        shrinkWrap: widget.isScrollable ? false : true,
+        itemCount: widget.shimmerLength,
+        padding: widget.padding,
         itemBuilder: (context, index) {
-          return showTheme1Store ? StoreShimmer(isEnable: _isNull)
-              : ItemShimmer(isEnabled: _isNull, isStore: isStore, hasDivider: index != shimmerLength-1);
+          return widget.showTheme1Store ? StoreShimmer(isEnable: _isNull)
+              : ItemShimmer(isEnabled: _isNull, isStore: widget.isStore, hasDivider: index != widget.shimmerLength-1);
         },
       ),
 

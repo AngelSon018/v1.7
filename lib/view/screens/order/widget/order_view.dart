@@ -49,9 +49,9 @@ class OrderView extends StatelessWidget {
                   scrollController: scrollController,
                   onPaginate: (int offset) {
                     if(isRunning) {
-                      Get.find<OrderController>().getRunningOrders(offset);
+                      Get.find<OrderController>().getRunningOrders(offset, isUpdate: true);
                     }else {
-                      Get.find<OrderController>().getHistoryOrders(offset);
+                      Get.find<OrderController>().getHistoryOrders(offset, isUpdate: true);
                     }
                   },
                   totalSize: paginatedOrderModel != null ? paginatedOrderModel.totalSize : null,
@@ -63,6 +63,7 @@ class OrderView extends StatelessWidget {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       bool _isParcel = paginatedOrderModel.orders[index].orderType == 'parcel';
+                      bool _isPrescription = paginatedOrderModel.orders[index].prescriptionOrder;
 
                       return InkWell(
                         onTap: () {
@@ -113,6 +114,17 @@ class OrderView extends StatelessWidget {
                                     fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white,
                                   )),
                                 )) : SizedBox(),
+
+                                _isPrescription ? Positioned(left: 0, top: 10, child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.horizontal(right: Radius.circular(Dimensions.RADIUS_SMALL)),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  child: Text('prescription'.tr, style: robotoMedium.copyWith(
+                                    fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white,
+                                  )),
+                                )) : SizedBox(),
                               ]),
                               SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
@@ -140,10 +152,10 @@ class OrderView extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context).primaryColor.withOpacity(0.1),
                                   ),
                                   child: Text(paginatedOrderModel.orders[index].orderStatus.tr, style: robotoMedium.copyWith(
-                                    fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor,
+                                    fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor,
                                   )),
                                 ),
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),

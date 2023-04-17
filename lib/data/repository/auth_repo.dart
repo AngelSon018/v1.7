@@ -196,4 +196,12 @@ class AuthRepo {
   Future<Response> registerDeliveryMan(DeliveryManBody deliveryManBody, List<MultipartBody> multiParts) async {
     return apiClient.postMultipartData(AppConstants.DM_REGISTER_URI, deliveryManBody.toJson(), multiParts);
   }
+
+  Future<Response> getModules(int zoneId) async {
+    return await apiClient.getData('${AppConstants.MODULES_URI}?zone_id=$zoneId',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+  }
 }

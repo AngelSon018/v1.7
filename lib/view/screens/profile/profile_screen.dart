@@ -110,10 +110,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }) : SizedBox(),
                 SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
 
-                _isLoggedIn ? ProfileButton(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
+                _isLoggedIn ? userController.userInfoModel.socialId == null ? ProfileButton(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
                   Get.toNamed(RouteHelper.getResetPasswordRoute('', '', 'password-change'));
-                }) : SizedBox(),
-                SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+                }) : SizedBox() : SizedBox(),
+                SizedBox(height: _isLoggedIn ? userController.userInfoModel.socialId == null ? Dimensions.PADDING_SIZE_SMALL : 0 : 0),
 
                 ProfileButton(icon: Icons.edit, title: 'edit_profile'.tr, onTap: () {
                   Get.toNamed(RouteHelper.getUpdateProfileRoute());

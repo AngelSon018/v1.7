@@ -53,7 +53,7 @@ class _CategoryItemScreenState extends State<CategoryItemScreen> with TickerProv
       }
     });
     storeScrollController?.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
+      if (storeScrollController.position.pixels == storeScrollController.position.maxScrollExtent
           && Get.find<CategoryController>().categoryStoreList != null
           && !Get.find<CategoryController>().isLoading) {
         int pageSize = (Get.find<CategoryController>().restPageSize / 10).ceil();
@@ -75,7 +75,7 @@ class _CategoryItemScreenState extends State<CategoryItemScreen> with TickerProv
     return GetBuilder<CategoryController>(builder: (catController) {
       List<Item> _item;
       List<Store> _stores;
-      if(catController.categoryItemList != null && catController.searchItemList != null) {
+      if(catController.isSearching ? catController.searchItemList != null : catController.categoryItemList != null) {
         _item = [];
         if (catController.isSearching) {
           _item.addAll(catController.searchItemList);
@@ -83,7 +83,7 @@ class _CategoryItemScreenState extends State<CategoryItemScreen> with TickerProv
           _item.addAll(catController.categoryItemList);
         }
       }
-      if(catController.categoryStoreList != null && catController.searchStoreList != null) {
+      if(catController.isSearching ? catController.searchStoreList != null : catController.categoryStoreList != null) {
         _stores = [];
         if (catController.isSearching) {
           _stores.addAll(catController.searchStoreList);
@@ -111,11 +111,14 @@ class _CategoryItemScreenState extends State<CategoryItemScreen> with TickerProv
                 border: InputBorder.none,
               ),
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
-              onSubmitted: (String query) => catController.searchData(
-                query, catController.subCategoryIndex == 0 ? widget.categoryID
-                  : catController.subCategoryList[catController.subCategoryIndex].id.toString(),
-                catController.type,
-              ),
+              onSubmitted: (String query) {
+                print('searching------------');
+                catController.searchData(
+                  query, catController.subCategoryIndex == 0 ? widget.categoryID
+                    : catController.subCategoryList[catController.subCategoryIndex].id.toString(),
+                  catController.type,
+                );
+              }
             ) : Text(widget.categoryName, style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
             )),

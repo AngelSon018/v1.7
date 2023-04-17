@@ -1,4 +1,5 @@
 import 'package:sixam_mart/controller/splash_controller.dart';
+import 'package:sixam_mart/data/model/response/item_model.dart';
 import 'package:sixam_mart/data/model/response/order_details_model.dart';
 import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
@@ -22,18 +23,30 @@ class OrderItemWidget extends StatelessWidget {
 
     String _variationText = '';
     if(orderDetails.variation.length > 0) {
-      List<String> _variationTypes = orderDetails.variation[0].type.split('-');
-      if(_variationTypes.length == orderDetails.itemDetails.choiceOptions.length) {
-        int _index = 0;
-        orderDetails.itemDetails.choiceOptions.forEach((choice) {
-          _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
-          _index = _index + 1;
-        });
-      }else {
-        _variationText = orderDetails.itemDetails.variations[0].type;
+      if(orderDetails.variation.length > 0) {
+        List<String> _variationTypes = orderDetails.variation[0].type.split('-');
+        if(_variationTypes.length == orderDetails.itemDetails.choiceOptions.length) {
+          int _index = 0;
+          orderDetails.itemDetails.choiceOptions.forEach((choice) {
+            _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
+            _index = _index + 1;
+          });
+        }else {
+          _variationText = orderDetails.itemDetails.variations[0].type;
+        }
+      }
+    }else if(orderDetails.foodVariation.length > 0) {
+      for(FoodVariation variation in orderDetails.foodVariation) {
+        _variationText += '${_variationText.isNotEmpty ? ', ' : ''}${variation.name} (';
+        if(variation.variationValues != null){
+          for(VariationValue value in variation.variationValues) {
+            _variationText += '${_variationText.endsWith('(') ? '' : ', '}${value.level}';
+          }
+        }
+        _variationText += ')';
       }
     }
-    
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         ClipRRect(
@@ -71,12 +84,12 @@ class OrderItemWidget extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
                 ),
                 child: Text(
                   Get.find<SplashController>().configModel.moduleConfig.module.unit ? orderDetails.itemDetails.unitType ?? ''
                       : orderDetails.itemDetails.veg == 0 ? 'non_veg'.tr : 'veg'.tr,
-                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white),
+                  style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
                 ),
               ) : SizedBox(),
             ]),
@@ -85,7 +98,7 @@ class OrderItemWidget extends StatelessWidget {
         ),
       ]),
 
-      (Get.find<SplashController>().configModel.moduleConfig.module.addOn && _addOnText.isNotEmpty) ? Padding(
+      (Get.find<SplashController>().getModuleConfig(orderDetails.itemDetails.moduleType).addOn && _addOnText.isNotEmpty) ? Padding(
         padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
         child: Row(children: [
           SizedBox(width: 60),
@@ -97,7 +110,7 @@ class OrderItemWidget extends StatelessWidget {
         ]),
       ) : SizedBox(),
 
-      orderDetails.itemDetails.variations.length > 0 ? Padding(
+      _variationText.isNotEmpty ? Padding(
         padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
         child: Row(children: [
           SizedBox(width: 60),

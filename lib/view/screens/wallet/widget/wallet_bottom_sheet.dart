@@ -28,7 +28,7 @@ class _WalletBottomSheetState extends State<WalletBottomSheet> {
     print(widget.fromWallet);
 
     int _exchangePointRate = Get.find<SplashController>().configModel.loyaltyPointExchangeRate;
-    int _minimumExchangePoint = Get.find<SplashController>().configModel.minimumPointToTransfer ?? 0 ;
+    int _minimumExchangePoint = Get.find<SplashController>().configModel.minimumPointToTransfer;
 
     return Container(
       width: 550,
@@ -68,6 +68,9 @@ class _WalletBottomSheetState extends State<WalletBottomSheet> {
                   buttonText: 'convert'.tr,
                   onPressed: () {
                     if(_amountController.text.isEmpty) {
+                      if(Get.isBottomSheetOpen){
+                        Get.back();
+                      }
                       showCustomSnackBar('input_field_is_empty'.tr);
                     }else{
                       int _amount = int.parse(_amountController.text.trim());

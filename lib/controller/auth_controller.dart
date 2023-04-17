@@ -11,6 +11,7 @@ import 'package:sixam_mart/data/model/body/delivery_man_body.dart';
 import 'package:sixam_mart/data/model/body/store_body.dart';
 import 'package:sixam_mart/data/model/body/signup_body.dart';
 import 'package:sixam_mart/data/model/body/social_log_in_body.dart';
+import 'package:sixam_mart/data/model/response/module_model.dart';
 import 'package:sixam_mart/data/model/response/response_model.dart';
 import 'package:sixam_mart/data/model/response/zone_model.dart';
 import 'package:sixam_mart/data/model/response/zone_response_model.dart';
@@ -43,6 +44,8 @@ class AuthController extends GetxController implements GetxService {
   int _dmTypeIndex = 0;
   List<String> _deliveryTimeTypeList = ['minute', 'hours', 'days'];
   int _deliveryTimeTypeIndex = 0;
+  List<ModuleModel> _moduleList;
+  int _selectedModuleIndex = 0;
 
   bool get isLoading => _isLoading;
   bool get notification => _notification;
@@ -61,6 +64,8 @@ class AuthController extends GetxController implements GetxService {
   int get dmTypeIndex => _dmTypeIndex;
   List<String> get deliveryTimeTypeList => _deliveryTimeTypeList;
   int get deliveryTimeTypeIndex => _deliveryTimeTypeIndex;
+  List<ModuleModel> get moduleList => _moduleList;
+  int get selectedModuleIndex => _selectedModuleIndex;
 
   Future<ResponseModel> registration(SignUpBody signUpBody) async {
     _isLoading = true;
@@ -361,14 +366,16 @@ class AuthController extends GetxController implements GetxService {
         double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
         double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
       ));
+      await getModules(_zoneList[0].id);
     } else {
       ApiChecker.checkApi(response);
     }
     update();
   }
 
-  void setZoneIndex(int index) {
+  Future<void> setZoneIndex(int index) async {
     _selectedZoneIndex = index;
+    await getModules(zoneList[selectedZoneIndex].id);
     update();
   }
 
@@ -503,6 +510,22 @@ class AuthController extends GetxController implements GetxService {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
+    update();
+  }
+
+  void selectModuleIndex(int index) {
+    _selectedModuleIndex = index;
+    update();
+  }
+
+  Future<void> getModules(int zoneId) async {
+    Response response = await authRepo.getModules(zoneId);
+    if (response.statusCode == 200) {
+      _moduleList = [];
+      response.body.forEach((storeCategory) => _moduleList.add(ModuleModel.fromJson(storeCategory)));
+    } else {
+      ApiChecker.checkApi(response);
+    }
     update();
   }
 

@@ -4,6 +4,7 @@ import 'package:sixam_mart/data/model/response/banner_model.dart';
 import 'package:sixam_mart/data/repository/banner_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sixam_mart/helper/responsive_helper.dart';
 
 class BannerController extends GetxController implements GetxService {
   final BannerRepo bannerRepo;
@@ -77,6 +78,10 @@ class BannerController extends GetxController implements GetxService {
             _bannerDataList.add(null);
           }
         });
+        if(ResponsiveHelper.isDesktop(Get.context) && _bannerImageList.length % 2 != 0){
+          _bannerImageList.add(_bannerImageList[0]);
+          _bannerDataList.add(_bannerDataList[0]);
+        }
       } else {
         ApiChecker.checkApi(response);
       }

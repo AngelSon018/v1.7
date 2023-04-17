@@ -162,9 +162,12 @@ class CategoryController extends GetxController implements GetxService {
           }
         } else {
           if (_isStore) {
+            print('=========query--------');
             _storeResultText = query;
             _searchStoreList = [];
             _searchStoreList.addAll(StoreModel.fromJson(response.body).stores);
+            print('=====$_searchStoreList');
+            update();
           } else {
             _itemResultText = query;
             _searchItemList = [];
